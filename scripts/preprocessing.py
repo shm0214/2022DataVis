@@ -56,6 +56,7 @@ def query(location_list, key="00ac96eedfff37b26c15b04e708d43a9"):
     else:
         print({'info': res['info'], 'location_list': location_list})
 
+
 def process(province, city):
     flag = True
     for path, dirs, files in os.walk("data/rawData"):
@@ -85,6 +86,38 @@ def process(province, city):
             else:
                 df.to_csv("data/data.csv", mode='a+', header=0)
 
+
+polRange = {
+    "SO2": [0, 50, 150, 475, 800, 1600, 2100, 2620],
+    "NO2": [0, 40, 80, 180, 280, 565, 750, 940],
+    "PM10": [0, 50, 150, 250, 350, 420, 500, 600],
+    "CO": [0, 2, 4, 14, 24, 36, 48, 60],
+    "PM2.5": [0, 35, 75, 115, 150, 250, 350, 500],
+    "O3": [0, 100, 160, 215, 265, 800]
+}
+
+aqiRange = [0, 50, 100, 150, 200, 300, 400, 500]
+
+
+def aqi(x, pol='PM2.5'):
+    polR = polRange[pol]
+    idx = 0
+    for i in range(len(polR) - 1):
+        if x >= polR[i] and x < polR[i + 1]:
+            idx = i
+            break
+    return (aqiRange[idx + 1] - aqiRange[idx]) / (
+        polR[idx + 1] - polR[idx]) * (x - polR[idx]) + aqiRange[idx]
+
+
+def cal_AQI():
+    df = pd.read_csv("data/data.csv", encoding='utf-8')
+    for k in polRange.keys():
+        temp = list(map(aqi, df[k], [k] * len(df[k])))
+    df[k + '-AQI'] = temp
+    df.to_csv("data/data-AQI.csv", mode='w', index=False)
+
+
 if __name__ == "__main__":
     if os.path.exists("data/province") and os.path.exists("data/city"):
         with open("data/province", 'rb') as f:
@@ -92,9 +125,11 @@ if __name__ == "__main__":
         with open("data/city", 'rb') as f:
             city = pickle.load(f)
     else:
-        province, city = reGeo("data/rawData201801/CN-Reanalysis-daily-2018010100.csv")
+        province, city = reGeo(
+            "data/rawData201801/CN-Reanalysis-daily-2018010100.csv")
         with open("data/province", 'wb') as f:
             pickle.dump(province, f)
         with open("data/city", 'wb') as f:
             pickle.dump(city, f)
     process(province, city)
+    cal_AQI()
