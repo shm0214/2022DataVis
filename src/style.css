@@ -30,7 +30,7 @@ h1 {
 }
 
 .left {
-    background-color: #02e2e2;
+    background-color: rgb(245,245,245);
     height: 100%;
     width: 15%;
     display: inline;
@@ -38,7 +38,7 @@ h1 {
 }
 
 .left-top {
-    background-color: #cc79cf;
+    background-color: rgb(245,245,245);
     height: 10%;
     width: 100%;
     display: inline;
@@ -46,7 +46,7 @@ h1 {
 }
 
 .left-down {
-    background-color: #b18999;
+    background-color: rgb(245,245,245);
     height: 90%;
     width: 100%;
     display: inline;
