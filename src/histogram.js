@@ -36,40 +36,79 @@ function Histogram(
         var aqi = parseInt(data[i].AQI);
         aqi = Math.min(500, aqi);
 
-        svg.append("rect")
-            .attr("x", leftMargin)
-            .attr("y", startY)
-            .attr("width", (maxWidth * aqi) / 500)
-            .attr("height", rectHeight)
-            .attr("fill", colorMap.get(d.type))
-            .append("title")
-            .text(d.data + (d.type == "CO" ? "m" : "u") + "g/m2");
+        if (num <= 30) {
+            svg.append("rect")
+                .attr("x", leftMargin)
+                .attr("y", startY)
+                .attr("width", (maxWidth * aqi) / 500)
+                .attr("height", rectHeight)
+                .attr("fill", colorMap.get(d.type))
+                .append("title")
+                .text(d.data + (d.type == "CO" ? "m" : "u") + "g/m2");
+            var text = svg.append("text").attr("font-size", "13px");
 
-        var text = svg.append("text").attr("font-size", "14px");
+            var tspan1 = text
+                .append("tspan")
+                .text(
+                    d.province +
+                        (d.province == "北京" ||
+                        d.province == "上海" ||
+                        d.province == "重庆" ||
+                        d.province == "天津"
+                            ? ""
+                            : " " + d.city)
+                )
+                .attr("x", leftMargin - 0.03 * width)
+                .attr("y", startY + rectHeight / 2)
+                .attr("text-anchor", "end");
+            var textHeight = tspan1.node().getBoundingClientRect().height;
+            tspan1.attr("y", startY + rectHeight / 2 - textHeight / 4);
 
-        var tspan1 = text
-            .append("tspan")
-            .text(d.province + " " + d.city)
-            .attr("x", leftMargin - 0.03 * width)
-            .attr("y", startY + rectHeight / 2)
-            .attr("text-anchor", "end");
-        var textHeight = tspan1.node().getBoundingClientRect().height;
-        tspan1.attr("y", startY + rectHeight / 2 - textHeight / 4);
-
-        text.append("tspan")
-            .text(d.month + "月" + d.day + "日")
-            .attr("x", leftMargin - 0.03 * width)
-            .attr("y", startY + rectHeight / 2 + textHeight / 2)
-            .attr("text-anchor", "end");
-
-        svg.append("text")
-            .attr("font-size", "14px")
-            .text(aqi)
-            .attr("x", leftMargin + 0.01 * width)
-            .attr("y", startY + rectHeight / 2 + textHeight / 4)
-            .attr("fill", "white");
+            text.append("tspan")
+                .text(d.month + "月" + d.day + "日")
+                .attr("x", leftMargin - 0.03 * width)
+                .attr("y", startY + rectHeight / 2 + textHeight / 2)
+                .attr("text-anchor", "end");
+            svg.append("text")
+                .attr("font-size", "14px")
+                .text(aqi)
+                .attr("x", leftMargin + 0.01 * width)
+                .attr("y", startY + rectHeight / 2 + textHeight / 4)
+                .attr("fill", "white");
+        } else {
+            svg.append("rect")
+                .attr("x", leftMargin)
+                .attr("y", startY)
+                .attr("width", (maxWidth * aqi) / 500)
+                .attr("height", rectHeight)
+                .attr("fill", colorMap.get(d.type))
+                .append("title")
+                .text(
+                    d.month +
+                        "月" +
+                        d.day +
+                        "日" +
+                        "-" +
+                        d.data +
+                        (d.type == "CO" ? "m" : "u") +
+                        "g/m2"
+                );
+            var text = svg
+                .append("text")
+                .attr("font-size", "11px")
+                .attr("x", leftMargin - 0.03 * width)
+                .attr("y", startY + (rectHeight * 2) / 3)
+                .attr("text-anchor", "end")
+                .text(d.province + " " + d.city);
+            var textHeight = text.node().getBoundingClientRect().height;
+            svg.append("text")
+                .attr("font-size", "11px")
+                .text(aqi)
+                .attr("x", leftMargin + 0.01 * width)
+                .attr("y", startY + rectHeight / 2 + textHeight / 4)
+                .attr("fill", "white");
+        }
     }
-
     return svg.node();
 }
 
