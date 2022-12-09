@@ -62,7 +62,7 @@ h1 {
 }
 
 .right-top {
-    background-color: #027202;
+    background-color: rgb(245,245,245);
     height: 15%;
     width: 100%;
     display: inline;
@@ -83,4 +83,8 @@ h1 {
     width: 50%;
     display: inline;
     float: left;
+}
+
+text{
+    pointer-events: none;
 }
