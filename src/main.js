@@ -1,6 +1,7 @@
 "use strict";
 import * as d3 from "d3";
 import histogram from "./histogram.js";
+import aqimap from "./map.js";
 import $ from "jquery";
 import total from "../data/AQI-rank/total.csv";
 import rank_11 from "../data/AQI-rank/11.csv";
@@ -36,6 +37,8 @@ import rank_64 from "../data/AQI-rank/64.csv";
 import rank_65 from "../data/AQI-rank/65.csv";
 import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
+import aqiData from "../data/data-AQI.csv";
+import geocn from "../data/geocn.json";
 
 const colorMap = new Map();
 colorMap.set("PM2.5", "rgb(66, 133, 244)");
@@ -292,3 +295,16 @@ function right_top_render() {
 }
 
 right_top_render();
+
+function right_right_render() {
+    $(".svg-right-right").empty();
+    // console.log(geocn);
+    var width = $(".right-right").width();
+    var height = $(".right-right").height();
+    aqimap(geocn, aqiData, {
+        width: width,
+        height: height,
+    });
+}
+
+right_right_render();
