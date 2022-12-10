@@ -38,12 +38,12 @@ import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
 
 const colorMap = new Map();
-colorMap.set("PM2.5", "rgb(66,133,244)");
-colorMap.set("PM10", "rgb(109,57,140)");
-colorMap.set("SO2", "rgb(15,157,88)");
-colorMap.set("NO2", "rgb(237,99,37)");
-colorMap.set("CO", "rgb(237,99,37)");
-colorMap.set("O3", "rgb(202,156,44)");
+colorMap.set("PM2.5", "rgb(66, 133, 244)");
+colorMap.set("PM10", "rgb(109, 57, 140)");
+colorMap.set("SO2", "rgb(15, 157, 88)");
+colorMap.set("NO2", "rgb(237, 99, 37)");
+colorMap.set("CO", "rgb(195, 26, 127)");
+colorMap.set("O3", "rgb(202, 156, 44)");
 
 $("#range").on("change", function (e) {
     var val = $("#range").val();
@@ -178,9 +178,117 @@ function left_render() {
                 height: height,
                 colorMap: colorMap,
                 num: num,
-            });
+            }).then(change_highlight_color(highlightColor));
         }
     });
 }
 
 left_render();
+
+var highlightColor = null;
+
+function change_highlight_color(color) {
+    highlightColor = color;
+    if (color) {
+        $(".highlight").remove();
+        var index = Array.from(colorMap.values()).indexOf(color);
+        var name = Array.from(colorMap.keys())[index];
+        console.log(name);
+        console.log(color);
+        console.log(d3.select("g .rect"));
+        var g = d3.selectAll("g .rect").filter(function (index) {
+            return $("rect", this).css("fill") == color;
+        });
+        console.log(g.node())
+        var bbox = g.select("text").node().getBBox();
+        var padding = 1;
+        g.insert("rect", "text")
+            .attr("x", (d) => bbox.x - padding)
+            .attr("y", (d) => bbox.y - padding)
+            .attr("class", "highlight")
+            .attr("name", (d) => Array.from(colorMap.keys())[d])
+            .attr("width", (d) => bbox.width + padding * 2)
+            .attr("height", (d) => bbox.height + padding * 2)
+            .style("fill", "rgb(205, 205, 205)");
+        $("rect").css("opacity", "1");
+        $("rect")
+            .filter(function (index) {
+                return $(this).css("fill") != color;
+            })
+            .css("opacity", "0.5");
+    } else {
+        $(".highlight").remove();
+        $("rect").css("opacity", "1");
+    }
+}
+
+function right_top_render() {
+    var width = $(".right-top").width();
+    var height = $(".right-top").height();
+    console.log(width, height);
+    const svg = d3
+        .select(".svg-right-top")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "max-width: 100%; max-height: 100%; height: intrinsic;");
+
+    svg.append("text")
+        .text("2018年中国空气质量分析")
+        .attr("font-size", "24px")
+        .attr("x", "25%")
+        .attr("y", "50%")
+        .attr("text-anchor", "middle");
+
+    let g = svg.append("g").attr("transform", `translate(0, ${height - 30})`);
+
+    let keys = Array.from(colorMap.keys());
+    let values = Array.from(colorMap.values());
+
+    let g1 = g
+        .selectAll("g.rect")
+        .data([0, 1, 2, 3, 4, 5])
+        .enter()
+        .append("g")
+        .attr("class", "rect");
+
+    var text = g1
+        .append("text")
+        .text((d) => keys[d])
+        .attr("y", 16)
+        .attr("x", (d) => 25 + 100 * d);
+
+    // var bbox = Array();
+    // $(".svg-right-top g text").each(function () {
+    //     bbox.push(this.getBBox());
+    // });
+    // console.log(bbox);
+    // var padding = 1;
+    // g1.insert("rect", "text")
+    //     .attr("x", (d) => bbox.x - padding)
+    //     .attr("y", (d) => bbox.y - padding)
+    //     .attr("class", "highlight")
+    //     .attr("name", (d) => keys[d])
+    //     .attr("width", (d) => bbox.width + padding * 2)
+    //     .attr("height", (d) => bbox.height + padding * 2)
+    //     .style("fill", "rgb(205, 205, 205)");
+
+    g1.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", (d) => 100 * d + 3)
+        .attr("fill", (d) => values[d])
+        .attr("rx", "5")
+        .attr("ry", "5")
+        .attr("cursor", "pointer")
+        .on("click", function (d) {
+            var color = $(this).css("fill");
+            if (highlightColor != color) {
+                change_highlight_color(color);
+            } else {
+                change_highlight_color(null);
+            }
+        });
+}
+
+right_top_render();
