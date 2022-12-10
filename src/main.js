@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import histogram from "./histogram.js";
 import $ from "jquery";
 import total from "../data/AQI-rank/total.csv";
+import province from "../data/data-province.csv";
 import rank_11 from "../data/AQI-rank/11.csv";
 import rank_12 from "../data/AQI-rank/12.csv";
 import rank_13 from "../data/AQI-rank/13.csv";
@@ -36,6 +37,7 @@ import rank_64 from "../data/AQI-rank/64.csv";
 import rank_65 from "../data/AQI-rank/65.csv";
 import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
+import Calendar from "./calendar.js";
 
 const colorMap = new Map();
 colorMap.set("PM2.5", "rgb(66, 133, 244)");
@@ -186,20 +188,19 @@ function left_render() {
 left_render();
 
 var highlightColor = null;
+var type = "all";
 
 function change_highlight_color(color) {
+    if (highlightColor == color) return;
     highlightColor = color;
     if (color) {
         $(".highlight").remove();
         var index = Array.from(colorMap.values()).indexOf(color);
         var name = Array.from(colorMap.keys())[index];
-        console.log(name);
-        console.log(color);
-        console.log(d3.select("g .rect"));
+        type = name;
         var g = d3.selectAll("g .rect").filter(function (index) {
             return $("rect", this).css("fill") == color;
         });
-        console.log(g.node())
         var bbox = g.select("text").node().getBBox();
         var padding = 1;
         g.insert("rect", "text")
@@ -210,16 +211,18 @@ function change_highlight_color(color) {
             .attr("width", (d) => bbox.width + padding * 2)
             .attr("height", (d) => bbox.height + padding * 2)
             .style("fill", "rgb(205, 205, 205)");
-        $("rect").css("opacity", "1");
-        $("rect")
+        $("rect:not(.calendar)").css("opacity", "1");
+        $("rect:not(.calendar)")
             .filter(function (index) {
                 return $(this).css("fill") != color;
             })
             .css("opacity", "0.5");
     } else {
+        type = "all";
         $(".highlight").remove();
-        $("rect").css("opacity", "1");
+        $("rect:not(.calendar)").css("opacity", "1");
     }
+    right_down_render();
 }
 
 function right_top_render() {
@@ -292,3 +295,31 @@ function right_top_render() {
 }
 
 right_top_render();
+
+var provinceIdx = 3;
+
+$("#select1").on("change", function (e) {
+    provinceIdx = parseInt($("#select1").val());
+    right_down_render();
+});
+
+function right_down_render() {
+    $(".svg-right-down").empty();
+    d3.csv(province).then((data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            var width = $(".right-down").width();
+            var height = $(".right-down").height();
+            Calendar(data, {
+                width: width,
+                height: height,
+                colorMap: colorMap,
+                idx: provinceIdx,
+                type: type,
+            });
+        }
+    });
+}
+
+right_down_render();
