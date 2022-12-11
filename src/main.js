@@ -1,6 +1,7 @@
 "use strict";
 import * as d3 from "d3";
 import histogram from "./histogram.js";
+import aqimap from "./map.js";
 import $ from "jquery";
 import total from "../data/AQI-rank/total.csv";
 import province from "../data/data-province.csv";
@@ -37,6 +38,7 @@ import rank_64 from "../data/AQI-rank/64.csv";
 import rank_65 from "../data/AQI-rank/65.csv";
 import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
+import geocn from "../data/geocn.json";
 import Calendar from "./calendar.js";
 
 const colorMap = new Map();
@@ -295,6 +297,34 @@ function right_top_render() {
 }
 
 right_top_render();
+
+var mapDate = "2018-01-01";
+
+$("#map-date").on("change", function(e) {
+    mapDate = $("#map-date").val();
+    right_right_render();
+});
+
+function right_right_render() {
+    $(".svg-right-right").empty();
+    // console.log(geocn);
+    d3.csv(province).then((data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            // console.log(data);
+            var width = $(".right-right").width();
+            var height = $(".right-right").height();
+            aqimap(geocn, data, {
+                width: width,
+                height: height,
+                date: mapDate,
+            });
+        }
+    });
+}
+
+right_right_render();
 
 var provinceIdx = 3;
 

@@ -78,9 +78,17 @@ h1 {
 }
 
 .right-right {
-    background-color: #562232;
+    background-color: rgb(245,245,245);
     height: 60%;
     width: 50%;
+    display: inline;
+    float: left;
+}
+
+.right-right-top {
+    background-color: rgb(245,245,245);
+    height: 32px;
+    width: 100%;
     display: inline;
     float: left;
 }
