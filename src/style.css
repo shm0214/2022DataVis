@@ -85,6 +85,14 @@ h1 {
     float: left;
 }
 
+.right-right-top {
+    background-color: rgb(245,245,245);
+    height: 32px;
+    width: 100%;
+    display: inline;
+    float: left;
+}
+
 .right-down {
     background-color: rgb(245,245,245);
     height: 25%;

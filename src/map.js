@@ -6,7 +6,7 @@ function AqiMap(
     {
         width = 640,
         height = 400,
-        date = new Date(2018, 0, 1)
+        date = "2018-01-01"
     } = {}
 ) {
     const svg = d3
@@ -24,63 +24,85 @@ function AqiMap(
     const geoPath = d3.geoPath().projection(projection);
 
     var aqiByDate = Array();
+    var dateObj = new Date(date);
     // console.log(mapData.features.length, aqiData.length);
     for (let i = 0; i < mapData.features.length; ++i) {
         let name = mapData.features[i].properties.name;
         // console.log(name);
         for (let j = 0; j < aqiData.length; ++j) {
             if (aqiData[j].province.match(name)
-                && (date.getMonth() + 1) == aqiData[j].month
-                && date.getDate() == aqiData[j].day) {
+                && (dateObj.getMonth() + 1) == aqiData[j].month
+                && dateObj.getDate() == aqiData[j].day) {
                     aqiByDate.push(aqiData[j].AQI);
                     break;
             }
         }
     }
-    console.log(aqiByDate);
+    // console.log(aqiByDate);
 
     // AQI 颜色分级
-    const colorScale = d3.scaleSequential()
-        .domain([0, 50, 100, 150, 200, 300, 500])
-        .range(["#01e400", "#ffe401", "#fe7e00", "#fe0000", "#98004b", "#82012a"]);
+    const colorScale = (aqi) => {
+        if (aqi >= 0 && aqi <= 50) return "#01e400";
+        else if (aqi <= 100) return "#ffe401";
+        else if (aqi <= 150) return "#fe7e00";
+        else if (aqi <= 200) return "#fe0000";
+        else if (aqi <= 300) return "#98004b";
+        else if (aqi <= 500) return "#82012a";
+        else return "#fff";
+    }
 
     svg.append("g")
-        .attr("transform", "translate(10, 50)")
+        .attr("transform", "translate(10, 40)")
         .selectAll("path")
         .data(mapData.features)
         .join("path")
-        .attr("stroke", "#ddd")
+        .attr("stroke", "#eee")
         .attr("stroke-width", 1)
-        .attr("fill", function(d, i) {
+        .attr("fill", (d, i) => {
             return colorScale(aqiByDate[i]);
         })
-        .attr("d", geoPath);
+        .attr("d", geoPath)
+        .on("mouseover", (e) => {
+            // console.log(e);
+            d3.select(e.target)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 3);
+        })
+        .on("mouseout", (e) => {
+            d3.select(e.target)
+                .attr("stroke", "#eee")
+                .attr("stroke-width", 1);
+        })
+        .append("title")
+        .text((d, i) => {
+            return d.properties.name + "\nAQI: " + parseFloat(aqiByDate[i]).toFixed(2);
+        });
     
     svg.append("g")
-        .attr("transform", "translate(10, 50)")
+        .attr("transform", "translate(10, 40)")
         .selectAll("text")
         .data(mapData.features)
         .join("text")
-        .attr("font-size", 12)
+        .attr("font-size", 13)
         .attr("text-anchor", "middle")
-        .attr("fill", "#777")
-        .attr("x", function(d, i) {
+        .attr("fill", "#000")
+        .attr("x", (d, i) => {
             return projection(d.properties.cp || [0, 0])[0];
         })
-        .attr("y", function(d, i) {
+        .attr("y", (d, i) => {
             return projection(d.properties.cp || [0, 0])[1];
         })
-        .attr("dx", function(d, i) {
+        .attr("dx", (d, i) => {
             if (d.properties.name == "香港") {
-                return 10;
+                return 16;
             }
         })
-        .attr("dy", function(d, i) {
+        .attr("dy", (d, i) => {
             if (d.properties.name == "澳门") {
                 return 10;
             }
         })
-        .text(function(d, i) {
+        .text((d, i) => {
             return d.properties.name;
         });
     

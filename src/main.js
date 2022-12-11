@@ -298,19 +298,27 @@ function right_top_render() {
 
 right_top_render();
 
+var mapDate = "2018-01-01";
+
+$("#map-date").on("change", function(e) {
+    mapDate = $("#map-date").val();
+    right_right_render();
+});
+
 function right_right_render() {
     $(".svg-right-right").empty();
-    console.log(geocn);
+    // console.log(geocn);
     d3.csv(province).then((data, error) => {
         if (error) {
             console.log(error);
         } else {
-            console.log(data);
+            // console.log(data);
             var width = $(".right-right").width();
             var height = $(".right-right").height();
             aqimap(geocn, data, {
                 width: width,
                 height: height,
+                date: mapDate,
             });
         }
     });
