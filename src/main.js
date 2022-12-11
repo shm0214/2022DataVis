@@ -38,7 +38,6 @@ import rank_64 from "../data/AQI-rank/64.csv";
 import rank_65 from "../data/AQI-rank/65.csv";
 import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
-import aqiData from "../data/data-AQI.csv";
 import geocn from "../data/geocn.json";
 import Calendar from "./calendar.js";
 
@@ -301,16 +300,24 @@ right_top_render();
 
 function right_right_render() {
     $(".svg-right-right").empty();
-    // console.log(geocn);
-    var width = $(".right-right").width();
-    var height = $(".right-right").height();
-    aqimap(geocn, aqiData, {
-        width: width,
-        height: height,
+    console.log(geocn);
+    d3.csv(province).then((data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(data);
+            var width = $(".right-right").width();
+            var height = $(".right-right").height();
+            aqimap(geocn, data, {
+                width: width,
+                height: height,
+            });
+        }
     });
 }
 
 right_right_render();
+
 var provinceIdx = 3;
 
 $("#select1").on("change", function (e) {
