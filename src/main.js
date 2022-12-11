@@ -2,6 +2,7 @@
 import * as d3 from "d3";
 import histogram from "./histogram.js";
 import aqimap from "./map.js";
+import nightingale from "./nightingale.js";
 import $ from "jquery";
 import total from "../data/AQI-rank/total.csv";
 import province from "../data/data-province.csv";
@@ -331,6 +332,7 @@ var provinceIdx = 3;
 $("#select1").on("change", function (e) {
     provinceIdx = parseInt($("#select1").val());
     right_down_render();
+    right_left_render();
 });
 
 function right_down_render() {
@@ -353,3 +355,30 @@ function right_down_render() {
 }
 
 right_down_render();
+
+var monthIdx = 1;
+
+$("#select2").on("change", function (e) {
+    monthIdx = parseInt($("#select2").val());
+    right_left_render();
+});
+
+
+function right_left_render(){
+    $(".svg-right-left").empty();
+    d3.csv(province).then((data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(data);
+            nightingale(data, {
+                width: 975,
+                height: 975,
+                idx: provinceIdx,
+                month: monthIdx,
+            });
+        };
+    }); 
+}
+
+right_left_render();

@@ -70,7 +70,7 @@ h1 {
 }
 
 .right-left {
-    background-color: #dcb944;
+    background-color: rgb(245,245,245);
     height: 60%;
     width: 50%;
     display: inline;
@@ -102,7 +102,7 @@ h1 {
 }
 
 .right-down-left {
-    background-color: rgb(245,245,245);
+    background-color: rgb(245, 245, 245);
     height: 100%;
     width: 10%;
     display: inline;
