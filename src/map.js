@@ -42,14 +42,95 @@ function AqiMap(
 
     // AQI 颜色分级
     const colorScale = (aqi) => {
-        if (aqi >= 0 && aqi <= 50) return "#01e400";
+        if (aqi >= 0 && aqi <= 50) return "rgb(15, 157, 88)";
         else if (aqi <= 100) return "#ffe401";
-        else if (aqi <= 150) return "#fe7e00";
-        else if (aqi <= 200) return "#fe0000";
-        else if (aqi <= 300) return "#98004b";
+        else if (aqi <= 150) return "rgb(237, 99, 37)";
+        else if (aqi <= 200) return "rgb(195, 26, 127)";
+        else if (aqi <= 300) return "rgb(109, 57, 140)";
         else if (aqi <= 500) return "#82012a";
         else return "#fff";
     }
+
+    svg.append("rect")  //添加一个矩形
+    .attr("x",50)
+    .attr("y",380)
+    .attr("width",18)
+    .attr("height",18)
+    .attr("fill","rgb(15, 157, 88)");
+
+    svg.append("g")
+        .append('text')
+        .attr("x",70)
+        .attr("y",394)
+        .style('font-weight', 20)
+        .style('font-family', 'Arial')
+        .style('fill', 'grey')
+        .text("优");
+
+    svg.append("rect")  //添加一个矩形
+    .attr("x",50)
+    .attr("y",403)
+    .attr("width",18)
+    .attr("height",18)
+    .attr("fill","#ffe401");
+
+    svg.append("g")
+    .append('text')
+    .attr("x",70)
+    .attr("y",417)
+    .style('font-weight', 20)
+    .style('font-family', 'Arial')
+    .style('fill', 'grey')
+    .text("良");
+
+    svg.append("rect")  //添加一个矩形
+    .attr("x",50)
+    .attr("y",426)
+    .attr("width",18)
+    .attr("height",18)
+    .attr("fill","rgb(237, 99, 37)");
+
+    svg.append("g")
+    .append('text')
+    .attr("x",70)
+    .attr("y",440)
+    .style('font-weight', 20)
+    .style('font-family', 'Arial')
+    .style('fill', 'grey')
+    .text("轻度污染");
+
+    svg.append("rect")  //添加一个矩形
+    .attr("x",50)
+    .attr("y",449)
+    .attr("width",18)
+    .attr("height",18)
+    .attr("fill","rgb(195, 26, 127)");
+
+    svg.append("g")
+    .append('text')
+    .attr("x",70)
+    .attr("y",463)
+    .style('font-weight', 20)
+    .style('font-family', 'Arial')
+    .style('fill', 'grey')
+    .text("重度污染");
+
+    svg.append("rect")  //添加一个矩形
+    .attr("x",50)
+    .attr("y",472)
+    .attr("width",18)
+    .attr("height",18)
+    .attr("fill","rgb(109, 57, 140)");
+
+    svg.append("g")
+    .append('text')
+    .attr("x",70)
+    .attr("y",486)
+    .style('font-weight', 20)
+    .style('font-family', 'Arial')
+    .style('fill', 'grey')
+    .text("严重污染");
+
 
     svg.append("g")
         .attr("transform", "translate(10, 40)")
