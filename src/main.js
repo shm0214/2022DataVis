@@ -45,7 +45,7 @@ import Calendar from "./calendar.js";
 const colorMap = new Map();
 colorMap.set("PM2.5", "rgb(66, 133, 244)");
 colorMap.set("PM10", "rgb(109, 57, 140)");
-colorMap.set("SO2", "rgb(15, 157, 88)");
+colorMap.set("SO2", "rgb(22, 174, 188)");
 colorMap.set("NO2", "rgb(237, 99, 37)");
 colorMap.set("CO", "rgb(195, 26, 127)");
 colorMap.set("O3", "rgb(202, 156, 44)");
@@ -301,7 +301,7 @@ right_top_render();
 
 var mapDate = "2018-01-01";
 
-$("#map-date").on("change", function(e) {
+$("#map-date").on("change", function (e) {
     mapDate = $("#map-date").val();
     right_right_render();
 });
@@ -363,8 +363,7 @@ $("#select2").on("change", function (e) {
     right_left_render();
 });
 
-
-function right_left_render(){
+function right_left_render() {
     $(".svg-right-left").empty();
     d3.csv(province).then((data, error) => {
         if (error) {
@@ -377,8 +376,8 @@ function right_left_render(){
                 idx: provinceIdx,
                 month: monthIdx,
             });
-        };
-    }); 
+        }
+    });
 }
 
 right_left_render();
