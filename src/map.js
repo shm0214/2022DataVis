@@ -5,7 +5,7 @@ function AqiMap(
     aqiData,
     {
         width = 640,
-        height = 400,
+        height = 640,
         date = "2018-01-01"
     } = {}
 ) {
@@ -13,7 +13,7 @@ function AqiMap(
         .select(".svg-right-right")
         .attr("width", width)
         .attr("height", height)
-        .attr("viewBox", [0, 0, width, height])
+        .attr("viewBox", [-10, -10, width, height])
         .attr("style", "max-width: 100%; max-height: 100%; height: intrinsic;");
     
     const projection = d3.geoMercator()
@@ -65,7 +65,7 @@ function AqiMap(
         .style('font-weight', 20)
         .style('font-family', 'Arial')
         .style('fill', 'grey')
-        .text("优");
+        .text("优(0<AQI<=50)");
 
     svg.append("rect")  //添加一个矩形
     .attr("x",50)
@@ -81,7 +81,7 @@ function AqiMap(
     .style('font-weight', 20)
     .style('font-family', 'Arial')
     .style('fill', 'grey')
-    .text("良");
+    .text("良(50<AOI<=100)");
 
     svg.append("rect")  //添加一个矩形
     .attr("x",50)
@@ -97,7 +97,7 @@ function AqiMap(
     .style('font-weight', 20)
     .style('font-family', 'Arial')
     .style('fill', 'grey')
-    .text("轻度污染");
+    .text("轻度污染(100<AOI<=150)");
 
     svg.append("rect")  //添加一个矩形
     .attr("x",50)
@@ -113,7 +113,7 @@ function AqiMap(
     .style('font-weight', 20)
     .style('font-family', 'Arial')
     .style('fill', 'grey')
-    .text("重度污染");
+    .text("重度污染(150<AQI<=200)");
 
     svg.append("rect")  //添加一个矩形
     .attr("x",50)
@@ -129,7 +129,7 @@ function AqiMap(
     .style('font-weight', 20)
     .style('font-family', 'Arial')
     .style('fill', 'grey')
-    .text("严重污染");
+    .text("严重污染(200<AQI<=300)");
 
 
     svg.append("g")

@@ -332,7 +332,7 @@ var provinceIdx = 3;
 $("#select1").on("change", function (e) {
     provinceIdx = parseInt($("#select1").val());
     right_down_render();
-    right_left_render();
+    // right_left_render();
 });
 
 function right_down_render() {
@@ -363,6 +363,10 @@ $("#select2").on("change", function (e) {
     right_left_render();
 });
 
+$("#select3").on("change", function (e) {
+    provinceIdx = parseInt($("#select3").val());
+    right_left_render();
+});
 
 function right_left_render(){
     $(".svg-right-left").empty();
