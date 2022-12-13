@@ -40,9 +40,21 @@ function Histogram(
             svg.append("rect")
                 .attr("x", leftMargin)
                 .attr("y", startY)
+                .attr("rx",3)
                 .attr("width", (maxWidth * aqi) / 500)
                 .attr("height", rectHeight)
                 .attr("fill", colorMap.get(d.type))
+                .on("mouseover", (e) => {
+                    // console.log(e);
+                    d3.select(e.target)
+                        .attr("stroke", "#fff")
+                        .attr("stroke-width", 3);
+                })
+                .on("mouseout", (e) => {
+                    d3.select(e.target)
+                        .attr("stroke", "#eee")
+                        .attr("stroke-width", 1);
+                })
                 .append("title")
                 .text(d.data + (d.type == "CO" ? "m" : "u") + "g/m2");
             var text = svg.append("text").attr("font-size", "13px");

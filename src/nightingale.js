@@ -17,6 +17,7 @@ function nightingale(
     var month_begin_index;
     var month_end_index;
     var if_begin_found = false;
+    var gas_num = 6;
 
     for (let i = 0; i < 365; i++) {
         if (province_data[i].month == month && !if_begin_found) {
@@ -31,7 +32,7 @@ function nightingale(
     }
 
     var month_data = province_data.slice(month_begin_index, month_end_index);
-    console.log(month_data);
+    // console.log(month_data);
 
     //total计算
     for (let i = 0; i < month_data.length; i++) {
@@ -51,12 +52,11 @@ function nightingale(
     month_data.columns = data.columns;
     // console.log(month_data);
 
-    const arc = d3
-        .arc()
-        .innerRadius((d) => y(d[0]) + 1)
-        .outerRadius((d) => y(d[1]))
-        .startAngle((d) => x(d.data.day))
-        .endAngle((d) => x(d.data.day) + x.bandwidth())
+    const arc = d3.arc()
+        .innerRadius(d => innerRadius/*y(d[0])+1*/)
+        .outerRadius(d => y(d[1] * 3))
+        .startAngle(d => x(d.data.day) + x.bandwidth() * (d.type_num / gas_num+0.5))
+        .endAngle(d => x(d.data.day) + x.bandwidth() * ((d.type_num + 1) / gas_num+0.5))
         .padAngle(0.01)
         .padRadius(innerRadius);
 
@@ -72,8 +72,7 @@ function nightingale(
         .domain([0, d3.max(month_data, (d) => d.total)])
         .range([innerRadius, outerRadius]);
 
-    const z = d3
-        .scaleOrdinal()
+    const z = d3.scaleOrdinal()
         .domain(month_data.columns.slice(3, 9))
         .range([
             "rgb(66, 133, 244)",
@@ -95,24 +94,18 @@ function nightingale(
                     (d) => `
             rotate(${((x(d.day) + x.bandwidth() / 2) * 180) / Math.PI - 90})
             translate(${innerRadius},0)
-          `
-                )
-                .call((g) =>
-                    g.append("line").attr("x2", -5).attr("stroke", "#000")
-                )
-                .call((g) =>
-                    g
-                        .append("text")
-                        .attr("transform", (d) =>
-                            (x(d.day) + x.bandwidth() / 2 + Math.PI / 2) %
-                                (2 * Math.PI) <
-                            Math.PI
-                                ? "rotate(90)translate(0,16)"
-                                : "rotate(-90)translate(0,-9)"
-                        )
-                        .text((d) => d.day)
-                )
-        );
+          `)
+            .call(g => g.append("line")
+                .attr("x1",-30)
+                .attr("x2", 300)
+                .attr("stroke", "#000")
+                .attr("stroke-opacity", 0.5))
+            .call(g => g.append("text")
+                .attr("transform", d => (x(d.day) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
+                    ? "rotate(90)translate(0,16)"
+                    : "rotate(-90)translate(0,-9)")
+                .attr("font-size","18px")
+                .text(d => d.day)));
 
     const yAxis = (g) =>
         g
@@ -151,8 +144,8 @@ function nightingale(
                     )
             );
 
-    console.log(month_data);
-    console.log(data);
+    // console.log(month_data);
+    // console.log(data);
 
     const legend = (g) =>
         g
@@ -177,12 +170,6 @@ function nightingale(
                     .text((d) => d)
             );
 
-    var tooltip = d3
-        .select("body")
-        .append("div")
-        .attr("class", "tooltip") //用于css设置类样式
-        .attr("opacity", 0.0);
-
     const class_right_left = d3.select(".right-left");
 
     const svg = class_right_left
@@ -194,65 +181,69 @@ function nightingale(
         .style("height", "100%")
         .style("font", "15px sans-serif");
 
+    // console.log(d3.stack().keys(month_data.columns.slice(3, 9))(month_data));
+
+    var stack_data = d3.stack().keys(month_data.columns.slice(3, 9))(month_data);
+    for (let i = 0; i < stack_data.length; i++) {
+        for (let j = 0; j < stack_data[i].length; j++) {
+            stack_data[i][j].type_num = i;
+            stack_data[i][j][1] = stack_data[i][j][1] - stack_data[i][j][0];
+        }
+
+        console.log(stack_data[i]);
+    }
+
+
+    // var max;
+    // for(let i = 0;i<stack_data.length;i++){
+    //     if(i==0){
+    //         max = Math.max.apply(Math,stack_data[i].map(item => { return item[1]; }));
+    //     }
+    //     else{
+    //         for(let j=0;j<stack_data[i].length;j++){
+    //             var value = stack_data[i][j][1] - stack_data[i][j][0];
+    //             stack_data[i][j][0]=max;
+    //             stack_data[i][j][1]=max+value;
+    //         }
+    //         max = Math.max.apply(Math,stack_data[i].map(item => { return item[1]; }));
+    //     }
+    // }
+    console.log(stack_data);
+    console.log(month_data);
+
+
+    //6种气体分别按顺序来
+
     svg.append("g")
         .selectAll("g")
-        .data(d3.stack().keys(month_data.columns.slice(3, 9))(month_data))
+        .data(/*d3.stack().keys(month_data.columns.slice(3, 9))(month_data)*/stack_data)
         .join("g")
         .attr("fill", (d) => z(d.key))
         .selectAll("path")
         .data((d) => d)
         .join("path")
         .attr("d", arc)
+        .on("mouseover", (e) => {
+            // console.log(e);
+            d3.select(e.target)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 3);
+        })
+        .on("mouseout", (e) => {
+            d3.select(e.target)
+                .attr("stroke", "#eee")
+                .attr("stroke-width", 1);
+        })
         .append("title")
         .text((d, i) => {
-            console.log(this);
-            console.log(i);
-            var value = d[1] - d[0];
-            var type;
-            if (value == d.data["PM2.5"]) {
-                type = "PM2.5";
-            } else if (value == d.data["PM10"]) {
-                type = "PM10";
-            } else if (value == d.data["SO2"]) {
-                type = "SO2";
-            } else if (value == d.data["NO2"]) {
-                type = "NO2";
-            } else if (value == d.data["CO"]) {
-                type = "CO";
-            } else {
-                type = "O3";
-            }
-            console.log(d.data);
+            // console.log(this);
+            // console.log(i);
+            var value = d[1];
+            var gas_List = ["PM2.5", "PM10", "SO2", "NO2", "CO", "O3"];
+            var type = gas_List[d.type_num];
+            // console.log(d.data);
             return type + "AQI: " + value.toFixed(2);
         });
-    // .on("mouseover", function (d) {
-    //     console.log(d.path);
-
-    //     const colorMap = new Map();
-    //     colorMap.set("rgb(66, 133, 244)","PM2.5");
-    //     colorMap.set("rgb(109, 57, 140)","PM10");
-    //     colorMap.set("rgb(22, 174, 188)","SO2");
-    //     colorMap.set("rgb(237, 99, 37)","NO2");
-    //     colorMap.set("rgb(195, 26, 127)","CO");
-    //     colorMap.set("rgb(202, 156, 44)","O3");
-
-    //     var g = d.path[1];
-    //     console.log(g.getAttribute("fill"));
-    //     var type = colorMap.get(g.getAttribute("fill"));
-    //     var value = d.path[0].__data__[1]-d.path[0].__data__[0];
-
-    //     var p = d3.pointer(d);
-    //     //设置tooltip文字
-    //     tooltip.html(type+"浓度:\n"+value.toFixed(2))
-    //         //设置tooltip的位置(left,top 相对于页面的距离)
-    //         .style("left", (p[0]+490) + "px")
-    //         .style("top", (p[1]+290) + "px")
-    //         .style("opacity", 1.0);
-    // })
-    // //--鼠标移出事件
-    // .on("mouseout", function (d) {
-    //     tooltip.style("opacity", 0.0);
-    // });
 
     svg.append("g").call(xAxis);
 
