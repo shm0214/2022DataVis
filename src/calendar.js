@@ -57,7 +57,7 @@ function Calendar(
         .on("mouseover", (d, i) => {
             $("#aqi-info").html(
                 `日期：${i.month}月${i.day}日<br>AQI：${parseFloat(
-                    type == "all" ? i.AQI : i[type + '-AQI']
+                    type == "all" ? i.AQI : i[type + "-AQI"]
                 ).toFixed(2)}<br>PM2.5：${parseFloat(i["PM2.5"]).toFixed(
                     2
                 )}<br>PM10：${parseFloat(i["PM10"]).toFixed(
@@ -70,9 +70,11 @@ function Calendar(
                     i["O3"]
                 ).toFixed(2)}<br>除CO单位为mg/m2外，其余均为ug/m2`
             );
+            d3.select(d.target).attr("stroke", "#000000").attr("stroke-width", 3);
         })
-        .on("mouseout", () => {
+        .on("mouseout", (e) => {
             $("#aqi-info").html("");
+            d3.select(e.target).attr("stroke", "#eee").attr("stroke-width", 1);
         })
         .attr("opacity", (v) => {
             var aqi = type == "all" ? v.AQI : v[type + "-AQI"];

@@ -96,7 +96,7 @@ function AqiMap(
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
-        .text("轻度污染(100<AOI<=150)");
+        .text("轻度污染(100<AQI<=150)");
 
     svg.append("rect") //添加一个矩形
         .attr("x", 50)

@@ -1,224 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <title>Histogram</title>
+        <link rel="stylesheet" href="style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-    <title>Histogram</title>
-    <link rel="stylesheet" href="style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style type="text/css">
+            .tooltip {
+                font-family: simsun;
+                font-size: 16px;
+                width: 120;
+                height: auto;
+                position: absolute;
+                text-align: center;
+                border-style: solid;
+                border-width: 1px;
+                background-color: white;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
 
-    <style type="text/css">
-        .tooltip {
-            font-family: simsun;
-            font-size: 16px;
-            width: 120;
-            height: auto;
-            position: absolute;
-            text-align: center;
-            border-style: solid;
-            border-width: 1px;
-            background-color: white;
-            border-radius: 5px;
-        }
-    </style>
-
-</head>
-
-<body>
-    <div class="left">
-        <div class="left-top">
-            <text style="
+    <body>
+        <div class="left">
+            <div class="left-top">
+                <text
+                    style="
                         font-size: 13px;
                         position: absolute;
                         left: 1%;
                         top: 2%;
-                    ">设置排行榜数量(3-50)</text>
-            <input type="text" id="num" name="num" required minlength="1" maxlength="2" disabled placeholder="20"
-                style="width: 1%; position: absolute; left: 1%; top: 4%" />
-            <input type="range" id="range" min="3" max="50" step="1" value="20" style="
+                    "
+                    >设置排行榜数量</text
+                >
+                <input
+                    type="text"
+                    id="num"
+                    name="num"
+                    required
+                    minlength="1"
+                    maxlength="2"
+                    disabled
+                    placeholder="20"
+                    style="
+                        width: 1%;
                         position: absolute;
-                        left: 3%;
+                        left: 1%;
+                        top: 4%;
+                        text-align: center;
+                    "
+                />
+                <text
+                    style="
+                        font-size: 14px;
+                        position: absolute;
+                        left: 3.5%;
+                        top: 4%;
+                    "
+                    >3</text
+                >
+                <text
+                    style="
+                        font-size: 14px;
+                        position: absolute;
+                        left: 11.5%;
+                        top: 4%;
+                    "
+                    >50</text
+                >
+                <input
+                    type="range"
+                    id="range"
+                    min="3"
+                    max="50"
+                    step="1"
+                    value="20"
+                    style="
+                        position: absolute;
+                        left: 4%;
                         top: 4%;
                         cursor: pointer;
-                    " />
-            <text style="
+                    "
+                />
+                <text
+                    style="
                         font-size: 13px;
                         position: absolute;
                         left: 1%;
                         top: 7%;
-                    ">选择省份</text>
-            <select id="select" style="
+                    "
+                    >选择省份</text
+                >
+                <select
+                    id="select"
+                    style="
                         position: absolute;
                         left: 5%;
                         top: 6.7%;
                         cursor: pointer;
-                    ">
-                <option value="total">全国</option>
-                <option value="11">北京</option>
-                <option value="12">天津</option>
-                <option value="13">河北</option>
-                <option value="14">山西</option>
-                <option value="15">内蒙古</option>
-                <option value="21">辽宁</option>
-                <option value="22">吉林</option>
-                <option value="23">黑龙江</option>
-                <option value="31">上海</option>
-                <option value="32">江苏</option>
-                <option value="33">浙江</option>
-                <option value="34">安徽</option>
-                <option value="35">福建</option>
-                <option value="36">江西</option>
-                <option value="37">山东</option>
-                <option value="41">河南</option>
-                <option value="42">湖北</option>
-                <option value="43">湖南</option>
-                <option value="44">广东</option>
-                <option value="45">广西</option>
-                <option value="46">海南</option>
-                <option value="50">重庆</option>
-                <option value="51">四川</option>
-                <option value="52">贵州</option>
-                <option value="53">云南</option>
-                <option value="54">西藏</option>
-                <option value="61">陕西</option>
-                <option value="62">甘肃</option>
-                <option value="63">青海</option>
-                <option value="64">宁夏</option>
-                <option value="65">新疆</option>
-                <option value="71">台湾</option>
-                <option value="81">香港</option>
-            </select>
-        </div>
-        <div class="left-down">
-            <svg class="svg-left-down"></svg>
-        </div>
-    </div>
-    <div class="right">
-        <div class="right-top"><svg class="svg-right-top"></svg></div>
-        <div class="right-left">
-            <div class="right-left-top">
-                <text style="font-size: 20px;">污染物AQI圆环图</text>
-                <text style="font-size: 14px;">选择省份</text>
-                <select id="select3" style="
-                            cursor: pointer;
-                        ">
-                    <option value="0">上海</option>
-                    <option value="1">云南</option>
-                    <option value="2">内蒙古</option>
-                    <option value="3" selected>北京</option>
-                    <option value="4">台湾</option>
-                    <option value="5">吉林</option>
-                    <option value="6">四川</option>
-                    <option value="7">天津</option>
-                    <option value="8">宁夏</option>
-                    <option value="9">安徽</option>
-                    <option value="10">山东</option>
-                    <option value="11">山西</option>
-                    <option value="12">广东</option>
-                    <option value="13">广西</option>
-                    <option value="14">新疆</option>
-                    <option value="15">江苏</option>
-                    <option value="16">江西</option>
-                    <option value="17">河北</option>
-                    <option value="18">河南</option>
-                    <option value="19">浙江</option>
-                    <option value="20">海南</option>
-                    <option value="21">湖北</option>
-                    <option value="22">湖南</option>
-                    <option value="23">甘肃</option>
-                    <option value="24">福建</option>
-                    <option value="25">西藏</option>
-                    <option value="26">贵州</option>
-                    <option value="27">辽宁</option>
-                    <option value="28">重庆</option>
-                    <option value="29">陕西</option>
-                    <option value="30">青海</option>
-                    <option value="31">香港</option>
-                    <option value="32">黑龙江</option>
-                </select>
-                <text style="font-size: 14px;">选择月份</text>
-                <select id="select2" style="
-                            cursor: pointer;
-                        ">
-                    <option value="1" selected>1月</option>
-                    <option value="2">2月</option>
-                    <option value="3">3月</option>
-                    <option value="4">4月</option>
-                    <option value="5">5月</option>
-                    <option value="6">6月</option>
-                    <option value="7">7月</option>
-                    <option value="8">8月</option>
-                    <option value="9">9月</option>
-                    <option value="10">10月</option>
-                    <option value="11">11月</option>
-                    <option value="12">12月</option>
+                    "
+                >
+                    <option value="total">全国</option>
+                    <option value="11">北京</option>
+                    <option value="12">天津</option>
+                    <option value="13">河北</option>
+                    <option value="14">山西</option>
+                    <option value="15">内蒙古</option>
+                    <option value="21">辽宁</option>
+                    <option value="22">吉林</option>
+                    <option value="23">黑龙江</option>
+                    <option value="31">上海</option>
+                    <option value="32">江苏</option>
+                    <option value="33">浙江</option>
+                    <option value="34">安徽</option>
+                    <option value="35">福建</option>
+                    <option value="36">江西</option>
+                    <option value="37">山东</option>
+                    <option value="41">河南</option>
+                    <option value="42">湖北</option>
+                    <option value="43">湖南</option>
+                    <option value="44">广东</option>
+                    <option value="45">广西</option>
+                    <option value="46">海南</option>
+                    <option value="50">重庆</option>
+                    <option value="51">四川</option>
+                    <option value="52">贵州</option>
+                    <option value="53">云南</option>
+                    <option value="54">西藏</option>
+                    <option value="61">陕西</option>
+                    <option value="62">甘肃</option>
+                    <option value="63">青海</option>
+                    <option value="64">宁夏</option>
+                    <option value="65">新疆</option>
+                    <option value="71">台湾</option>
+                    <option value="81">香港</option>
                 </select>
             </div>
-            <svg class="svg-right-left" ></svg>
-        </div>
-        <div class="right-middle">
-            
-        </div>
-        <div class="right-right">
-            <div class="right-right-top">
-                <text style="font-size: 20px;">AQI地图</text>
-                <text style="font-size: 14px;">选择日期</text>
-                <input type="date" id="map-date" value="2018-01-01" min="2018-01-01" max="2018-12-31">
+            <div class="left-down">
+                <svg class="svg-left-down"></svg>
             </div>
-            <svg class="svg-right-right"></svg>
         </div>
-        <div class="right-down" >
-            <div class="right-down-left">
-                <text style="font-size: 20px;position: absolute; top: 76%">AQI日历图</text>
+        <div class="right">
+            <div class="right-top"><svg class="svg-right-top"></svg></div>
+            <div class="right-left">
+                <div class="right-left-top">
+                    <text style="font-size: 20px">污染物AQI圆环图</text>
+                    <text style="font-size: 14px">选择省份</text>
+                    <select id="select3" style="cursor: pointer">
+                        <option value="0">上海</option>
+                        <option value="1">云南</option>
+                        <option value="2">内蒙古</option>
+                        <option value="3" selected>北京</option>
+                        <option value="4">台湾</option>
+                        <option value="5">吉林</option>
+                        <option value="6">四川</option>
+                        <option value="7">天津</option>
+                        <option value="8">宁夏</option>
+                        <option value="9">安徽</option>
+                        <option value="10">山东</option>
+                        <option value="11">山西</option>
+                        <option value="12">广东</option>
+                        <option value="13">广西</option>
+                        <option value="14">新疆</option>
+                        <option value="15">江苏</option>
+                        <option value="16">江西</option>
+                        <option value="17">河北</option>
+                        <option value="18">河南</option>
+                        <option value="19">浙江</option>
+                        <option value="20">海南</option>
+                        <option value="21">湖北</option>
+                        <option value="22">湖南</option>
+                        <option value="23">甘肃</option>
+                        <option value="24">福建</option>
+                        <option value="25">西藏</option>
+                        <option value="26">贵州</option>
+                        <option value="27">辽宁</option>
+                        <option value="28">重庆</option>
+                        <option value="29">陕西</option>
+                        <option value="30">青海</option>
+                        <option value="31">香港</option>
+                        <option value="32">黑龙江</option>
+                    </select>
+                    <text style="font-size: 14px">选择月份</text>
+                    <select id="select2" style="cursor: pointer">
+                        <option value="1" selected>1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                <svg class="svg-right-left"></svg>
+            </div>
+            <div class="right-middle"></div>
+            <div class="right-right">
+                <div class="right-right-top">
+                    <text style="font-size: 20px">AQI地图</text>
+                    <text style="font-size: 14px">选择日期</text>
+                    <input
+                        type="date"
+                        id="map-date"
+                        value="2018-01-01"
+                        min="2018-01-01"
+                        max="2018-12-31"
+                    />
+                </div>
+                <svg class="svg-right-right"></svg>
+            </div>
+            <div class="right-down">
+                <div class="right-down-left">
+                    <text style="font-size: 20px; position: absolute; top: 76%"
+                        >AQI日历图</text
+                    >
 
-                <text style="position: absolute; top: 80%">选择省份</text>
-                <select id="select1" style="
+                    <text style="position: absolute; top: 80%">选择省份</text>
+                    <select
+                        id="select1"
+                        style="
                             position: absolute;
                             left: 20%;
                             top: 80%;
                             cursor: pointer;
-                        ">
-                    <option value="0">上海</option>
-                    <option value="1">云南</option>
-                    <option value="2">内蒙古</option>
-                    <option value="3" selected>北京</option>
-                    <option value="4">台湾</option>
-                    <option value="5">吉林</option>
-                    <option value="6">四川</option>
-                    <option value="7">天津</option>
-                    <option value="8">宁夏</option>
-                    <option value="9">安徽</option>
-                    <option value="10">山东</option>
-                    <option value="11">山西</option>
-                    <option value="12">广东</option>
-                    <option value="13">广西</option>
-                    <option value="14">新疆</option>
-                    <option value="15">江苏</option>
-                    <option value="16">江西</option>
-                    <option value="17">河北</option>
-                    <option value="18">河南</option>
-                    <option value="19">浙江</option>
-                    <option value="20">海南</option>
-                    <option value="21">湖北</option>
-                    <option value="22">湖南</option>
-                    <option value="23">甘肃</option>
-                    <option value="24">福建</option>
-                    <option value="25">西藏</option>
-                    <option value="26">贵州</option>
-                    <option value="27">辽宁</option>
-                    <option value="28">重庆</option>
-                    <option value="29">陕西</option>
-                    <option value="30">青海</option>
-                    <option value="31">香港</option>
-                    <option value="32">黑龙江</option>
-                </select>
-                <text id="aqi-info" style="font-size: 14px;position: absolute; top: 83%"></text>
-            </div>
-            <div class="right-down-right" >
-                <svg class="svg-right-down"></svg>
+                        "
+                    >
+                        <option value="0">上海</option>
+                        <option value="1">云南</option>
+                        <option value="2">内蒙古</option>
+                        <option value="3" selected>北京</option>
+                        <option value="4">台湾</option>
+                        <option value="5">吉林</option>
+                        <option value="6">四川</option>
+                        <option value="7">天津</option>
+                        <option value="8">宁夏</option>
+                        <option value="9">安徽</option>
+                        <option value="10">山东</option>
+                        <option value="11">山西</option>
+                        <option value="12">广东</option>
+                        <option value="13">广西</option>
+                        <option value="14">新疆</option>
+                        <option value="15">江苏</option>
+                        <option value="16">江西</option>
+                        <option value="17">河北</option>
+                        <option value="18">河南</option>
+                        <option value="19">浙江</option>
+                        <option value="20">海南</option>
+                        <option value="21">湖北</option>
+                        <option value="22">湖南</option>
+                        <option value="23">甘肃</option>
+                        <option value="24">福建</option>
+                        <option value="25">西藏</option>
+                        <option value="26">贵州</option>
+                        <option value="27">辽宁</option>
+                        <option value="28">重庆</option>
+                        <option value="29">陕西</option>
+                        <option value="30">青海</option>
+                        <option value="31">香港</option>
+                        <option value="32">黑龙江</option>
+                    </select>
+                    <text
+                        id="aqi-info"
+                        style="font-size: 14px; position: absolute; top: 83%"
+                    ></text>
+                </div>
+                <div class="right-down-right">
+                    <svg class="svg-right-down"></svg>
+                </div>
             </div>
         </div>
-    </div>
-    <script type="text/javascript" src="main.js"></script>
-</body>
-
+        <script type="text/javascript" src="main.js"></script>
+    </body>
 </html>
