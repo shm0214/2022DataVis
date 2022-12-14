@@ -18,7 +18,7 @@ body {
     margin: 0;
     position: absolute;
     height: 120%;
-    width: 120%;
+    width: 100%;
     /* left: 50%;
   top: 50%;
   transform: translate(-50%, -50%); */
@@ -72,15 +72,7 @@ h1 {
 .right-left {
     background-color: rgb(245,245,245);
     height: 65%;
-    width: 40%;
-    display: inline;
-    float: left;
-}
-
-.right-middle {
-    background-color: rgb(245,245,245);
-    height: 65%;
-    width: 15%;
+    width: 50%;
     display: inline;
     float: left;
 }
@@ -88,7 +80,7 @@ h1 {
 .right-right {
     background-color: rgb(245,245,245);
     height: 65%;
-    width: 45%;
+    width: 50%;
     display: inline;
     float: left;
 }
