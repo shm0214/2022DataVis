@@ -214,8 +214,8 @@ function change_highlight_color(color) {
             .attr("width", (d) => bbox.width + padding * 2)
             .attr("height", (d) => bbox.height + padding * 2)
             .style("fill", "rgb(205, 205, 205)");
-        $("rect:not(.calendar)").css("opacity", "1");
-        $("rect:not(.calendar)")
+        $("rect:not(.calendar):not(.map)").css("opacity", "1");
+        $("rect:not(.calendar):not(.map)")
             .filter(function (index) {
                 return $(this).css("fill") != color;
             })

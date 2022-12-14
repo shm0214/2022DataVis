@@ -8,7 +8,7 @@ function nightingale(
         height = width,
         idx = 3,
         month = 1,
-        innerRadius = 200,
+        innerRadius = 180,
         outerRadius = /*Math.min(width, height) / 2*/ 400,
     } = {}
 ) {

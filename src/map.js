@@ -51,8 +51,9 @@ function AqiMap(
     };
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 370)
+        .attr("y", 360)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(0, 153, 102)");
@@ -60,15 +61,16 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 384)
+        .attr("y", 374)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
         .text("优(0<AQI<=50)");
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 393)
+        .attr("y", 383)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(255, 222, 51)");
@@ -76,15 +78,16 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 407)
+        .attr("y", 397)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
-        .text("良(50<AOI<=100)");
+        .text("良(50<AQI<=100)");
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 416)
+        .attr("y", 406)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(255, 153, 51)");
@@ -92,15 +95,16 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 430)
+        .attr("y", 420)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
         .text("轻度污染(100<AQI<=150)");
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 439)
+        .attr("y", 429)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(204, 0, 51)");
@@ -108,15 +112,16 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 453)
+        .attr("y", 443)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
         .text("中度污染(150<AQI<=200)");
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 462)
+        .attr("y", 452)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(102, 0, 153)");
@@ -124,15 +129,16 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 476)
+        .attr("y", 466)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
         .text("重度污染(200<AQI<=300)");
 
     svg.append("rect") //添加一个矩形
+        .attr("class", "map")
         .attr("x", 50)
-        .attr("y", 485)
+        .attr("y", 475)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(126, 0, 35)");
@@ -140,7 +146,7 @@ function AqiMap(
     svg.append("g")
         .append("text")
         .attr("x", 70)
-        .attr("y", 499)
+        .attr("y", 489)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")

@@ -18,7 +18,7 @@ function Calendar(
         .attr("viewBox", [0, 0, width, height])
         .attr("style", "max-width: 100%; max-height: 100%; height: intrinsic;");
     var data1 = data.slice(idx * 365, (idx + 1) * 365);
-    console.log(type)
+    console.log(type);
 
     const margin = 30;
     const weekBoxWidth = 20;
@@ -37,7 +37,7 @@ function Calendar(
         (width - margin - weekBoxWidth - cellMargin * 53 - 10) / 54
     );
     var cellCol = 0;
-    var aqiRange = [0, 50, 100, 150, 200, 300, 400, 500];
+    var aqiRange = [0, 50, 100, 150, 200, 300];
 
     var cell = cellBox
         .selectAll("rect")
@@ -70,17 +70,29 @@ function Calendar(
                     i["O3"]
                 ).toFixed(2)}<br>除CO单位为mg/m2外，其余均为ug/m2`
             );
-            d3.select(d.target).attr("stroke", "#000000").attr("stroke-width", 3);
+            d3.select(d.target)
+                .attr("stroke", "#000000")
+                .attr("stroke-width", 3);
+            var fill = d3.select(d.target).attr("fill");
+            $(".legend").css("fill", fill);
+            var idx = Math.ceil(
+                10 * (d3.select(d.target).attr("opacity") - 0.5)
+            );
+            $(".legend#" + idx)
+                .attr("stroke", "#000000")
+                .attr("stroke-width", 3);
         })
         .on("mouseout", (e) => {
             $("#aqi-info").html("");
             d3.select(e.target).attr("stroke", "#eee").attr("stroke-width", 1);
+            $(".legend").css("fill", "rgb(100, 100, 100)");
+            $(".legend").attr("stroke", "#eee").attr("stroke-width", 1);
         })
         .attr("opacity", (v) => {
             var aqi = type == "all" ? v.AQI : v[type + "-AQI"];
             var idx = 0;
-            if (aqi >= 500) {
-                idx = 7;
+            if (aqi >= 300) {
+                idx = 5;
             } else {
                 for (idx; idx < aqiRange.length - 1; idx++) {
                     if (aqi < aqiRange[idx + 1]) {
@@ -88,7 +100,7 @@ function Calendar(
                     }
                 }
             }
-            return idx * 0.1 + 0.3;
+            return idx * 0.1 + 0.5;
         })
         .attr("x", (v, i) => {
             if (i % 7 == 0) {
@@ -169,6 +181,40 @@ function Calendar(
         .attr("y", (v, i) => {
             return weekScale(i);
         });
+
+    const cellBox1 = svg
+        .append("g")
+        .attr(
+            "transform",
+            "translate(" + (margin + weekBoxWidth) + ", " + (margin + 10) + ")"
+        );
+
+    var labels = ["优", "良", "轻度污染", "中度污染", "重度污染", "严重污染"];
+
+    cellBox1
+        .selectAll("rect")
+        .data([0, 1, 2, 3, 4, 5])
+        .enter()
+        .append("rect")
+        .attr("class", "legend")
+        .attr("id", (v) => v)
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("rx", 3)
+        .attr("fill", "rgb(100, 100, 100)")
+        .attr("opacity", (v) => {
+            return v * 0.1 + 0.5;
+        })
+        .attr("x", (v, i) => {
+            var x = (47 - 1 + v) * cellSize;
+            return x + cellMargin * (47 + v - 1);
+        })
+        .attr("y", (v, i) => {
+            var y = 7;
+            return y * cellSize + cellMargin * y + 6;
+        })
+        .append("title")
+        .text((v) => labels[v]);
 
     return svg.node();
 }
