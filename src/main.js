@@ -39,7 +39,7 @@ import rank_64 from "../data/AQI-rank/64.csv";
 import rank_65 from "../data/AQI-rank/65.csv";
 import rank_71 from "../data/AQI-rank/71.csv";
 import rank_81 from "../data/AQI-rank/81.csv";
-import geocn from "../data/geocn.json";
+import geocn from "../data/map.json";
 import Calendar from "./calendar.js";
 
 const colorMap = new Map();
@@ -227,6 +227,7 @@ function change_highlight_color(color) {
     }
     right_left_render();
     right_down_render();
+    right_right_render();
 }
 
 function right_top_render() {
@@ -337,7 +338,9 @@ function right_right_render() {
             aqimap(geocn, data, {
                 width: width,
                 height: height,
+                colorMap: colorMap,
                 date: mapDate,
+                type: type,
             });
         }
     });
