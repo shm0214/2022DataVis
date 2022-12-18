@@ -225,6 +225,7 @@ function change_highlight_color(color) {
         $(".highlight").remove();
         $("rect:not(.calendar)").css("opacity", "1");
     }
+    right_left_render();
     right_down_render();
 }
 
@@ -298,6 +299,23 @@ function right_top_render() {
 }
 
 right_top_render();
+
+function right_top_right_render(){
+    $(".svg-right-top-right").empty();
+    d3.csv(province).then((data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(data);
+            sankey(data, {
+                idx : 3,
+                month : 1,
+            })
+        }
+    });
+}
+
+right_top_right_render();
 
 var mapDate = "2018-01-01";
 
@@ -380,6 +398,7 @@ function right_left_render(){
                 height: 975,
                 idx: provinceIdx,
                 month: monthIdx,
+                hightlightColor: highlightColor,
             });
         }
     });

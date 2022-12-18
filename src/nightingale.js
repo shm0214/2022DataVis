@@ -10,6 +10,7 @@ function nightingale(
         month = 1,
         innerRadius = 180,
         outerRadius = /*Math.min(width, height) / 2*/ 400,
+        hightlightColor = null,
     } = {}
 ) {
     //选择出来的省份一年的数据
@@ -42,8 +43,8 @@ function nightingale(
             parseFloat(month_data[i]["SO2"]) +
             parseFloat(
                 month_data[i]["NO2"] +
-                    parseFloat(month_data[i]["CO"]) +
-                    parseFloat(month_data[i]["O3"])
+                parseFloat(month_data[i]["CO"]) +
+                parseFloat(month_data[i]["O3"])
             );
         // console.log(total);
         month_data[i].total = total;
@@ -52,11 +53,185 @@ function nightingale(
     month_data.columns = data.columns;
     // console.log(month_data);
 
+
+    if (hightlightColor != null) {
+        const colorMap = new Map();
+        colorMap.set("rgb(66, 133, 244)",0);
+        colorMap.set("rgb(109, 57, 140)",1);
+        colorMap.set("rgb(22, 174, 188)",2);
+        colorMap.set("rgb(237, 99, 37)",3);
+        colorMap.set("rgb(195, 26, 127)",4);
+        colorMap.set("rgb(202, 156, 44)",5);
+
+        var gas_List = ["PM2.5", "PM10", "SO2", "NO2", "CO", "O3"];
+        
+        var color_num = colorMap.get(hightlightColor);
+
+        var gas = gas_List[color_num];
+
+        var max = 0;
+        var stack_data = d3.stack().keys(month_data.columns.slice(3+color_num, 3+color_num+1))(month_data);
+        console.log(stack_data);
+        for (let i = 0; i < stack_data.length; i++) {
+            for (let j = 0; j < stack_data[i].length; j++) {
+                stack_data[i][j][1] = stack_data[i][j][1] - stack_data[i][j][0];
+                if(stack_data[i][j][1]>max){
+                    max =  stack_data[i][j][1];
+                }
+            }
+        }
+        console.log(max);
+        console.log(d3.max(month_data, (d) => d[gas]));
+        const arc = d3.arc()
+            .innerRadius(d => y(d[0]))
+            .outerRadius(d => y(d[1]))
+            .startAngle(d => x(d.data.day))
+            .endAngle(d => x(d.data.day) + x.bandwidth())
+            .padAngle(0.01)
+            .padRadius(innerRadius);
+
+        const x = d3
+            .scaleBand()
+            .domain(month_data.map((d) => d.day))
+            .range([0, 2 * Math.PI])
+            .align(0);
+
+        
+        // var max = Math.max.apply(Math,month_data.map(item => { return item[gas] }))
+        // This scale maintains area proportionality of radial bars
+        console.log(month_data);
+        console.log(stack_data);
+        const y = d3
+            .scaleRadial()
+            .domain([0, d3.max(stack_data[0], (d) => d[1])])
+            .range([innerRadius, outerRadius]);
+
+        const z = d3.scaleOrdinal()
+            .domain(month_data.columns.slice(3, 9))
+            .range([
+                "rgb(66, 133, 244)",
+                "rgb(109, 57, 140)",
+                "rgb(22, 174, 188)",
+                "rgb(237, 99, 37)",
+                "rgb(195, 26, 127)",
+                "rgb(202, 156, 44)",
+            ]);
+
+        const xAxis = (g) =>
+            g.attr("text-anchor", "middle").call((g) =>
+                g
+                    .selectAll("g")
+                    .data(month_data)
+                    .join("g")
+                    .attr(
+                        "transform",
+                        (d) => `
+            rotate(${((x(d.day) + x.bandwidth() / 2) * 180) / Math.PI - 90})
+            translate(${innerRadius},0)
+          `)
+                    .call(g => g.append("line")
+                        .attr("x1", -5)
+                        .attr("stroke", "#000")
+                        .attr("stroke-opacity", 0.5))
+                    .call(g => g.append("text")
+                        .attr("transform", d => (x(d.day) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
+                            ? "rotate(90)translate(0,16)"
+                            : "rotate(-90)translate(0,-9)")
+                        .attr("font-size", "18px")
+                        .text(d => d.day)));
+
+        const yAxis = (g) =>
+            g
+                .attr("text-anchor", "middle")
+                .call((g) =>
+                    g
+                        .append("text")
+                        .attr("y", (d) => -y(y.ticks(5).pop()))
+                        .attr("dy", "-1em")
+                        .text("AQI")
+                )
+                .call((g) =>
+                    g
+                        .selectAll("g")
+                        .data(y.ticks(4).slice(1))
+                        .join("g")
+                        .attr("fill", "none")
+                        .call((g) =>
+                            g
+                                .append("circle")
+                                .attr("stroke", "#000")
+                                .attr("stroke-opacity", 0.5)
+                                .attr("r", y)
+                        )
+                        .call((g) =>
+                            g
+                                .append("text")
+                                .attr("y", (d) => -y(d))
+                                .attr("dy", "0.35em")
+                                .attr("stroke", "#fff")
+                                .attr("stroke-width", 2)
+                                .text(y.tickFormat(4, "s"))
+                                .clone(true)
+                                .attr("fill", "#000")
+                                .attr("stroke", "none")
+                        )
+                );
+
+        const class_right_left = d3.select(".right-left");
+
+        const svg = class_right_left
+            .select("svg")
+            .attr("height", height)
+            .attr("width", width)
+            .attr("viewBox", `${-width / 2} ${-height / 2} ${width} ${height}`)
+            .style("width", "100%")
+            .style("height", "100%")
+            .style("font", "15px sans-serif");
+
+        // console.log(d3.stack().keys(month_data.columns.slice(3, 9))(month_data));
+
+
+        //6种气体分别按顺序来
+
+        svg.append("g")
+            .selectAll("g")
+            .data(/*d3.stack().keys(month_data.columns.slice(3, 9))(month_data)*/stack_data)
+            .join("g")
+            .attr("fill", (d) => z(d.key))
+            .selectAll("path")
+            .data((d) => d)
+            .join("path")
+            .attr("d", arc)
+            .on("mouseover", (e) => {
+                // console.log(e);
+                d3.select(e.target)
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 3);
+            })
+            .on("mouseout", (e) => {
+                d3.select(e.target)
+                    .attr("stroke", "#eee")
+                    .attr("stroke-width", 1);
+            })
+            .append("title")
+            .text((d, i) => {
+                var value = d[1];
+                return gas + "AQI: " + value.toFixed(2);
+            });
+
+        svg.append("g").call(xAxis);
+
+        svg.append("g")
+            .call(yAxis);
+
+        return svg.node();
+    }
+
     const arc = d3.arc()
         .innerRadius(d => innerRadius/*y(d[0])+1*/)
         .outerRadius(d => y(d[1] * 3))
-        .startAngle(d => x(d.data.day) + x.bandwidth() * (d.type_num / gas_num+0.5))
-        .endAngle(d => x(d.data.day) + x.bandwidth() * ((d.type_num + 1) / gas_num+0.5))
+        .startAngle(d => x(d.data.day) + x.bandwidth() * (d.type_num / gas_num + 0.5))
+        .endAngle(d => x(d.data.day) + x.bandwidth() * ((d.type_num + 1) / gas_num + 0.5))
         .padAngle(0.01)
         .padRadius(innerRadius);
 
@@ -70,6 +245,11 @@ function nightingale(
     const y = d3
         .scaleRadial()
         .domain([0, d3.max(month_data, (d) => d.total)])
+        .range([innerRadius, outerRadius]);
+
+    const y_1 = d3
+        .scaleRadial()
+        .domain([0, d3.max(month_data, (d) => (d.total / 3))])
         .range([innerRadius, outerRadius]);
 
     const z = d3.scaleOrdinal()
@@ -95,17 +275,17 @@ function nightingale(
             rotate(${((x(d.day) + x.bandwidth() / 2) * 180) / Math.PI - 90})
             translate(${innerRadius},0)
           `)
-            .call(g => g.append("line")
-                .attr("x1",-30)
-                .attr("x2", 300)
-                .attr("stroke", "#000")
-                .attr("stroke-opacity", 0.5))
-            .call(g => g.append("text")
-                .attr("transform", d => (x(d.day) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
-                    ? "rotate(90)translate(0,16)"
-                    : "rotate(-90)translate(0,-9)")
-                .attr("font-size","18px")
-                .text(d => d.day)));
+                .call(g => g.append("line")
+                    .attr("x1", -30)
+                    .attr("x2", 300)
+                    .attr("stroke", "#000")
+                    .attr("stroke-opacity", 0.5))
+                .call(g => g.append("text")
+                    .attr("transform", d => (x(d.day) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
+                        ? "rotate(90)translate(0,16)"
+                        : "rotate(-90)translate(0,-9)")
+                    .attr("font-size", "18px")
+                    .text(d => d.day)));
 
     const yAxis = (g) =>
         g
@@ -113,14 +293,14 @@ function nightingale(
             .call((g) =>
                 g
                     .append("text")
-                    .attr("y", (d) => -y(y.ticks(5).pop()))
+                    .attr("y", (d) => -y_1(y_1.ticks(5).pop()))
                     .attr("dy", "-1em")
-                    .text("concentration")
+                    .text("AQI")
             )
             .call((g) =>
                 g
                     .selectAll("g")
-                    .data(y.ticks(4).slice(1))
+                    .data(y_1.ticks(4).slice(1))
                     .join("g")
                     .attr("fill", "none")
                     .call((g) =>
@@ -128,16 +308,16 @@ function nightingale(
                             .append("circle")
                             .attr("stroke", "#000")
                             .attr("stroke-opacity", 0.5)
-                            .attr("r", y)
+                            .attr("r", y_1)
                     )
                     .call((g) =>
                         g
                             .append("text")
-                            .attr("y", (d) => -y(d))
+                            .attr("y", (d) => -y_1(d))
                             .attr("dy", "0.35em")
                             .attr("stroke", "#fff")
                             .attr("stroke-width", 2)
-                            .text(y.tickFormat(5, "s"))
+                            .text(y_1.tickFormat(5, "s"))
                             .clone(true)
                             .attr("fill", "#000")
                             .attr("stroke", "none")
@@ -190,7 +370,7 @@ function nightingale(
             stack_data[i][j][1] = stack_data[i][j][1] - stack_data[i][j][0];
         }
 
-        console.log(stack_data[i]);
+        // console.log(stack_data[i]);
     }
 
 
@@ -208,8 +388,6 @@ function nightingale(
     //         max = Math.max.apply(Math,stack_data[i].map(item => { return item[1]; }));
     //     }
     // }
-    console.log(stack_data);
-    console.log(month_data);
 
 
     //6种气体分别按顺序来
@@ -247,8 +425,8 @@ function nightingale(
 
     svg.append("g").call(xAxis);
 
-    // svg.append("g")
-    //     .call(yAxis);
+    svg.append("g")
+        .call(yAxis);
 
     // svg.append("g")
     //     .call(legend);

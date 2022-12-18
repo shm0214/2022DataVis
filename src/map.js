@@ -52,16 +52,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 360)
+        .attr("x", 40)
+        .attr("y", 342)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(0, 153, 102)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 374)
+        .attr("x", 60)
+        .attr("y", 356)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
@@ -69,16 +69,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 383)
+        .attr("x", 40)
+        .attr("y", 365)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(255, 222, 51)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 397)
+        .attr("x", 60)
+        .attr("y", 379)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
@@ -86,16 +86,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 406)
+        .attr("x", 40)
+        .attr("y", 388)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(255, 153, 51)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 420)
+        .attr("x", 60)
+        .attr("y", 402)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
@@ -103,16 +103,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 429)
+        .attr("x", 40)
+        .attr("y", 411)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(204, 0, 51)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 443)
+        .attr("x", 60)
+        .attr("y", 425)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
@@ -120,16 +120,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 452)
+        .attr("x", 40)
+        .attr("y", 434)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(102, 0, 153)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 466)
+        .attr("x", 60)
+        .attr("y", 448)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
@@ -137,16 +137,16 @@ function AqiMap(
 
     svg.append("rect") //添加一个矩形
         .attr("class", "map")
-        .attr("x", 50)
-        .attr("y", 475)
+        .attr("x", 40)
+        .attr("y", 457)
         .attr("width", 18)
         .attr("height", 18)
         .attr("fill", "rgb(126, 0, 35)");
 
     svg.append("g")
         .append("text")
-        .attr("x", 70)
-        .attr("y", 489)
+        .attr("x", 60)
+        .attr("y", 471)
         .style("font-weight", 20)
         .style("font-family", "Arial")
         .style("fill", "grey")
