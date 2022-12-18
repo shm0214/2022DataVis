@@ -243,7 +243,7 @@ function right_top_render() {
     svg.append("text")
         .text("2018年中国空气质量分析")
         .attr("font-size", "24px")
-        .attr("x", "25%")
+        .attr("x", "40%")
         .attr("y", "50%")
         .attr("text-anchor", "middle");
 
