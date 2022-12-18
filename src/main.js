@@ -194,7 +194,7 @@ var highlightColor = null;
 var type = "all";
 
 function change_highlight_color(color) {
-    if (highlightColor == color) return;
+    // if (highlightColor == color) return;
     highlightColor = color;
     if (color) {
         $(".highlight").remove();
